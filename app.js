@@ -11,8 +11,8 @@ app.set('port', process.env.PORT||8080);
 
 // 가상 데이터
 let fakeUser = {
-    username: 'park123@park.com',
-    password: 'park456'
+    username: 'abc123',
+    password: 'asdasd'
 }
 
 app.use(morgan('dev'));
@@ -96,13 +96,22 @@ app.post('/login',
         res.send('Login success..!');
     });
 
-app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
+
+/* 버전으로 인해 사용법 변경
+    app.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+*/
+app.get('/logout', function (req, res) {
+    req.logout(function(err){
+        if(err){return next(err);}
+        res.redirect('/');
+    });
 });
 
 // 404 error process
-app.use((req, res, nexr) =>{
+app.use((req, res, next) =>{
     const error = new Error(`${req.method} ${req.url} 해당 주소가 없습니다.`);
     error.status = 404;
     next(error);
